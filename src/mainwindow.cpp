@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
   QRect screenGeometry = primaryScreen->availableGeometry();
   resize(screenGeometry.size());
   this->setStyleSheet("background-color: #343a40;");
+//  this->setStyleSheet("background-color: #ffffff;");
   // Initialize UI components
   initializeButtons();
   initializeLayouts();
@@ -196,33 +197,66 @@ void MainWindow::setup()
   mainLayout->addLayout(buttonsLayout);
   mainLayout->addLayout(leftLayout);
   mainLayout->addLayout(rightLayout);
-}
+}/*
 void MainWindow::setupRam(QVBoxLayout* ramLayout)
 {
-//  rightLayout->addWidget(ramTextEdit);
-
-//  RAMSegment* stack = new RAMSegment();
-//  stack->setTitle("Stack");
-//  RAMSegment* heap = new RAMSegment();
-//  heap->setTitle("Heap");
-//  ramLayout->addLayout(stack->getLayout());
-//  ramLayout->addLayout(heap->getLayout());
-//  ramTextEdit->addAction("Slot 1");
-//  ramTextEdit->addAction("Slot 1");
-//  ramTextEdit->addAction("Slot 1");
-////  mainLayout->addLayout(ramLayout);
   QGraphicsScene* ramScene = new QGraphicsScene(this);
   QGraphicsView* ramView = new QGraphicsView(ramScene);
 
   RAMSegment* stack = new RAMSegment("Stack", ramScene, this);
   RAMSegment* heap = new RAMSegment("Heap", ramScene, this);
+//  RAMSegment* bss = new RAMSegment("BSS", ramScene, this);
+//  RAMSegment* func = new RAMSegment("Function", ramScene, this);
+
   ramSegments.push_back(stack);
   ramSegments.push_back(heap);
+  QScrollArea* ramScrollArea = new QScrollArea();
+  ramScrollArea->setWidgetResizable(true);
+
+  QWidget* ramWidget = new QWidget();
+  QVBoxLayout *ramWidgetLayout = new QVBoxLayout(ramWidget);
 
   ramLayout->addLayout(stack->getLayout());
   ramLayout->addLayout(heap->getLayout());
+//  ramLayout->addLayout(bss->getLayout());
+//  ramLayout->addLayout(func->getLayout());
+  ramScrollArea->setWidget(ramWidget);
+
   ramLayout->addWidget(ramView);
+}*/
+void MainWindow::setupRam(QVBoxLayout* ramLayout)
+{
+    QGraphicsScene* ramScene = new QGraphicsScene(this);
+
+    RAMSegment* stack = new RAMSegment("Stack", ramScene, this);
+    RAMSegment* heap = new RAMSegment("Heap", ramScene, this);
+    RAMSegment* bss = new RAMSegment("BSS", ramScene, this);
+    RAMSegment* func = new RAMSegment("Function", ramScene, this);
+
+    ramSegments.push_back(stack);
+    ramSegments.push_back(heap);
+
+    // Create a scroll area
+    QScrollArea* ramScrollArea = new QScrollArea();
+    ramScrollArea->setWidgetResizable(true);
+
+    // Create a widget to contain the QGraphicsView
+    QWidget* ramWidget = new QWidget();
+    QVBoxLayout* ramWidgetLayout = new QVBoxLayout(ramWidget);
+
+    // Add RAM segments to the layout
+    ramWidgetLayout->addLayout(stack->getLayout());
+    ramWidgetLayout->addLayout(heap->getLayout());
+    ramWidgetLayout->addLayout(bss->getLayout());
+    ramWidgetLayout->addLayout(func->getLayout());
+
+    // Set the widget as the scroll area's content
+    ramScrollArea->setWidget(ramWidget);
+
+    // Add the scroll area to the ram layout
+    ramLayout->addWidget(ramScrollArea);
 }
+
 MainWindow::~MainWindow()
 {
     disconnectSignalsAndSlots();
